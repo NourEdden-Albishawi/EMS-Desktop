@@ -1,62 +1,27 @@
 package me.nouredden.ems.entities;
 
+import lombok.Data;
+
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
+@Data
 public class Event {
-    private UUID uniqueId;
+    private UUID uniqueId = UUID.randomUUID();
     private String title;
-    private LocalDate creationDate, startDate, endDate;
+    private String description;
     private String location;
 
-    public Event(String title, String location, LocalDate startDate, LocalDate endDate) {
-        this.uniqueId = UUID.randomUUID();
-        this.title = title;
-        this.creationDate = LocalDate.now();
-        this.location = location;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+    private LocalDate creationDate = LocalDate.now();
+    private LocalDate startDate;
+    private LocalDate endDate;
 
-    public UUID getUniqueId() {
-        return this.uniqueId;
-    }
+    private byte[] thumbnail;
+    private List<byte[]> photos;
+    private int capacity;
 
-    public String getTitle() {
-        return this.title;
-    }
-
-    public LocalDate getCreationDate() {
-        return this.creationDate;
-    }
-
-    public String getLocation() {
-        return this.location;
-    }
-
-    public LocalDate getStartDate() {
-        return this.startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return this.endDate;
-    }
-
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    private int categoryId;
+    private Category category;
 
 }

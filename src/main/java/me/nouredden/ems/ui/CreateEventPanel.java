@@ -1,13 +1,11 @@
 package me.nouredden.ems.ui;
 
-import me.nouredden.ems.EventManagementSystem;
 import me.nouredden.ems.entities.Event;
 import me.nouredden.ems.utils.DateLabelFormatter;
 import me.nouredden.ems.utils.SystemProvider;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
-import org.pushingpixels.trident.Timeline;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -19,7 +17,7 @@ public class CreateEventPanel extends JPanel {
     private final JTextField txtTitle;
     private final JDatePickerImpl startDatePicker;
     private final JDatePickerImpl endDatePicker;
-    private final JTextField txtLocation;
+    private final JTextField txtDescription;
 
     public CreateEventPanel(ManageEventsPanel manageEventsPanel) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -48,8 +46,8 @@ public class CreateEventPanel extends JPanel {
         JDatePanelImpl endDatePanel = new JDatePanelImpl(endDateModel, endDateProperties);
         endDatePicker = new JDatePickerImpl(endDatePanel, new DateLabelFormatter());
 
-        JLabel lblLocation = new JLabel("Location:");
-        txtLocation = createStyledTextField();
+        JLabel lblLocation = new JLabel("Description:");
+        txtDescription = createStyledTextField();
 
         JButton btnCreateEvent = new JButton("Create Event");
         styleBootstrapButton(btnCreateEvent);
@@ -57,9 +55,9 @@ public class CreateEventPanel extends JPanel {
             String title = txtTitle.getText();
             java.sql.Date startDateSql = (java.sql.Date) startDatePicker.getModel().getValue();
             java.sql.Date endDateSql = (java.sql.Date) endDatePicker.getModel().getValue();
-            String location = txtLocation.getText();
+            String description = txtDescription.getText();
 
-            if (title.isEmpty() || startDateSql == null || endDateSql == null || location.isEmpty()) {
+            if (title.isEmpty() || startDateSql == null || endDateSql == null || description.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please fill all fields.");
                 return;
             }
@@ -67,10 +65,13 @@ public class CreateEventPanel extends JPanel {
             LocalDate startDate = startDateSql.toLocalDate();
             LocalDate endDate = endDateSql.toLocalDate();
 
-            Event event = new Event(title, location, startDate, endDate);
+            Event event = new Event();
+            event.setTitle(title);
+            event.setDescription(description);
+            event.setStartDate(startDate);
+            event.setEndDate(endDate);
             SystemProvider.getEventManager().insert(event);
             JOptionPane.showMessageDialog(this, "Event Created Successfully!");
-
             clearFields();
 
             manageEventsPanel.refreshTable();
@@ -83,7 +84,7 @@ public class CreateEventPanel extends JPanel {
         add(lblEndDate);
         add(endDatePicker);
         add(lblLocation);
-        add(txtLocation);
+        add(txtDescription);
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(btnCreateEvent);
     }
@@ -115,6 +116,6 @@ public class CreateEventPanel extends JPanel {
         txtTitle.setText("");
         startDatePicker.getModel().setValue(null);
         endDatePicker.getModel().setValue(null);
-        txtLocation.setText("");
+        txtDescription.setText("");
     }
 }
